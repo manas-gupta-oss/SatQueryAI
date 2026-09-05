@@ -1,0 +1,128 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #05080c;
+  --color-bg-elevated: #090d13;
+  --color-panel: #0c121b;
+  --color-panel-soft: #0f1620;
+  --color-line: #1c2632;
+  --color-line-soft: #141d27;
+
+  --color-ink: #e6edf5;
+  --color-ink-soft: #93a2b5;
+  --color-ink-faint: #59677a;
+
+  --color-accent: #22d3ee;
+  --color-accent-soft: #0e2530;
+  --color-online: #34d399;
+  --color-warn: #f5a524;
+  --color-error: #f87171;
+
+  --color-worker1: #4f8cff;
+  --color-worker1-soft: #10203f;
+  --color-worker2: #b389f9;
+  --color-worker2-soft: #221a3d;
+  --color-worker3: #ff9a52;
+  --color-worker3-soft: #3a2210;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+}
+
+html {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(34, 211, 238, 0.07), transparent),
+    linear-gradient(var(--color-bg), var(--color-bg));
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-faint);
+}
+
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 1.6s ease-in-out infinite;
+}
+
+@keyframes scan {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.animate-scan {
+  animation: scan 1.8s linear infinite;
+}
+
+@keyframes flow-dash {
+  to { stroke-dashoffset: -24; }
+}
+.animate-flow-dash {
+  stroke-dasharray: 4 4;
+  animation: flow-dash 0.9s linear infinite;
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.35s ease-out both;
+}
+
+.bg-stars {
+  background-color: #060912;
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.55), transparent),
+    radial-gradient(1px 1px at 120px 90px, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1.5px 1.5px at 200px 40px, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 260px 150px, rgba(255,255,255,0.35), transparent),
+    radial-gradient(1px 1px at 340px 70px, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1.5px 1.5px at 400px 190px, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 60px 170px, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 460px 110px, rgba(255,255,255,0.45), transparent);
+  background-repeat: repeat;
+  background-size: 480px 220px;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.35; }
+}
+.animate-twinkle {
+  animation: twinkle 3.2s ease-in-out infinite;
+}
