@@ -1,0 +1,26 @@
+# SatQueryAI backend -- the API, orchestration and reporting layer.
+#
+# Install these INTO the same environment that can run the specialists, i.e.
+# .venv-unsloth (see models/requirements-unsloth.txt). The backend imports
+# models/generate_report_v2.py, which needs unsloth + transformers 5.5:
+#
+#   uv pip install --python .venv-unsloth\Scripts\python.exe -r backend\requirements.txt
+#
+# The backend also runs on its own with no ML stack at all -- workers fall back
+# to stubs and every other layer (routing, validation, PDF) still works. That is
+# the SATQUERY_WORKERS=stub path, useful for frontend work on a machine with no
+# GPU.
+
+fastapi>=0.115
+uvicorn[standard]>=0.30
+python-multipart>=0.0.9      # multipart/form-data uploads
+pydantic>=2.7                # already required by orchestration/state.py
+langgraph>=0.2               # the orchestration graph
+reportlab>=4.2               # PDF generation
+pillow>=10.0                 # image probing and box overlays
+
+# --- optional --------------------------------------------------------------
+# Only needed for SATQUERY_ROUTER=llm, which swaps the deterministic rule router
+# for the Qwen2.5-3B BOSS in orchestration/nodes/boss_node.py:
+#   PyYAML>=6.0                configs/boss_config.yaml
+#   lm-format-enforcer>=0.10   constrained JSON decoding (the tested backend)

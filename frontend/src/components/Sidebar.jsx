@@ -88,7 +88,7 @@ export default function Sidebar({ sq }) {
           )}
         </button>
         <p className="text-center text-[11px] text-ink-faint">
-          Powered by Qwen2-VL-2B vision-language AI
+          Powered by Qwen2.5-VL-3B vision-language AI
         </p>
       </div>
     </aside>

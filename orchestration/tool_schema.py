@@ -120,7 +120,7 @@ WORKER_REGISTRY: Dict[WorkerId, WorkerSpec] = {
         requires_co_registration=True,
         requires_same_location=True,
         requires_distinct_timestamps=False,  # timestamps are often unavailable
-        tuned_on="CDVQA",
+        tuned_on="LEVIR-CC",
     ),
 }
 
