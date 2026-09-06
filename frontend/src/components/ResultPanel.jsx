@@ -1,6 +1,77 @@
-import { AlertOctagon, CheckCircle2, ChevronDown, FlaskConical, XCircle } from "lucide-react"
+import {
+  AlertOctagon,
+  CheckCircle2,
+  ChevronDown,
+  Download,
+  FileText,
+  FlaskConical,
+  ShieldAlert,
+  ShieldCheck,
+  ShieldX,
+  XCircle,
+} from "lucide-react"
 import { useState } from "react"
+import { reportUrl, resolveAssetUrl } from "../api/satqueryApi"
 import { TASK_TYPE_LABELS, WORKER_SHORT_NAMES } from "../lib/constants"
+
+// severity -> how the self-consistency badge reads. The wording is deliberate:
+// this layer checks the model against itself, it does not verify the answer
+// against the image. See models/validate.py.
+const CONSISTENCY = {
+  ok: { Icon: ShieldCheck, tone: "text-online border-online/40 bg-online/10",
+        label: "Self-consistency: passed" },
+  warn: { Icon: ShieldAlert, tone: "text-warn border-warn/40 bg-warn/10",
+          label: "Self-consistency: warnings" },
+  reject: { Icon: ShieldX, tone: "text-error border-error/40 bg-error/10",
+            label: "Self-consistency: rejected" },
+}
+
+function ReportCard({ result }) {
+  const href = reportUrl(result)
+  if (!href) {
+    if (!result.report_error) return null
+    return (
+      <div className="mt-4 rounded-lg border border-warn/30 bg-warn/5 p-3">
+        <p className="text-[10.5px] font-medium uppercase tracking-wide text-warn">Report</p>
+        <p className="mt-1 text-[12.5px] text-ink-soft">
+          The PDF report could not be generated: {result.report_error}
+        </p>
+      </div>
+    )
+  }
+  return (
+    <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-accent/30 bg-accent/5 p-4">
+      <div className="flex items-center gap-3">
+        <FileText className="h-5 w-5 shrink-0 text-accent" />
+        <div>
+          <p className="text-[13px] font-semibold text-ink">Full PDF report</p>
+          <p className="mt-0.5 text-[11.5px] leading-snug text-ink-soft">
+            Imagery with detections, every extracted field, the self-consistency check and the
+            execution trace.
+          </p>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-md border border-line px-3 py-2 text-[11.5px] font-medium text-ink-soft transition hover:border-accent hover:text-ink"
+        >
+          Preview
+        </a>
+        <a
+          href={href}
+          download
+          className="flex items-center gap-1.5 rounded-md bg-accent px-3.5 py-2 text-[11.5px] font-semibold text-white transition hover:opacity-90"
+        >
+          <Download className="h-3.5 w-3.5" />
+          Download PDF
+        </a>
+      </div>
+    </div>
+  )
+}
 
 function ConfidenceBar({ label, value }) {
   if (value === null || value === undefined) return null
@@ -25,6 +96,8 @@ export default function ResultPanel({ result, images }) {
   const isOk = result.status === "ok"
   const isRejected = result.status === "rejected"
   const isError = result.status === "error" || (!isOk && !isRejected)
+  const consistency = CONSISTENCY[result.self_consistency?.severity]
+  const overlaySrc = result.overlay_url ? resolveAssetUrl(result.overlay_url) : null
 
   return (
     <section className="w-full max-w-4xl animate-fade-in-up rounded-xl border border-line bg-panel p-5 sm:p-6">
@@ -35,6 +108,17 @@ export default function ResultPanel({ result, images }) {
           {isError && <AlertOctagon className="h-4.5 w-4.5 text-error" />}
           <h3 className="text-sm font-bold tracking-wide text-ink">SatQuery Response</h3>
         </div>
+        {consistency && (
+          <span
+            className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-mono font-semibold ${consistency.tone}`}
+            title="Checks the model's output against itself for contradictions. It cannot verify a claim against the actual image."
+          >
+            <consistency.Icon className="h-3 w-3" />
+            {consistency.label.toUpperCase()}
+            {result.self_consistency?.issue_count > 0 &&
+              ` (${result.self_consistency.issue_count})`}
+          </span>
+        )}
         {result._demo && (
           <span className="flex items-center gap-1.5 rounded-full border border-warn/40 bg-warn/10 px-2.5 py-1 text-[10px] font-mono font-semibold text-warn">
             <FlaskConical className="h-3 w-3" />
@@ -66,6 +150,18 @@ export default function ResultPanel({ result, images }) {
           </p>
         </div>
       </div>
+
+      {result.degraded && (
+        <div className="mt-4 rounded-lg border border-warn/40 bg-warn/10 p-3">
+          <p className="text-[10.5px] font-medium uppercase tracking-wide text-warn">
+            Specialist not loaded — routing stub used
+          </p>
+          <p className="mt-1 text-[12.5px] leading-relaxed text-ink-soft">
+            The routing decision below is real, but the answer is a placeholder: the fine-tuned
+            model could not be loaded on this machine. {result.error}
+          </p>
+        </div>
+      )}
 
       {result.audit_summary && (
         <div className="mt-4">
@@ -121,6 +217,24 @@ export default function ResultPanel({ result, images }) {
           </ul>
         </div>
       )}
+
+      {overlaySrc && (
+        <div className="mt-4">
+          <p className="text-[10.5px] font-medium uppercase tracking-wide text-ink-faint">
+            Visual Evidence
+          </p>
+          <img
+            src={overlaySrc}
+            alt="Model detections drawn on the analysed imagery"
+            className="mt-2 w-full rounded-lg border border-line"
+          />
+          <p className="mt-1.5 text-[10.5px] leading-relaxed text-ink-faint">
+            Boxes are the specialist's own normalised coordinates, drawn on the image it analysed.
+          </p>
+        </div>
+      )}
+
+      <ReportCard result={result} />
 
       {images?.length > 0 && (
         <div className="mt-4">

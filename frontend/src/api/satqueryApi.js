@@ -81,6 +81,14 @@ export function runQuery({ query, imageIds, coRegistered = null, sameLocation = 
   })
 }
 
+// Absolute URL of the PDF report for a completed query. The backend returns a
+// relative report_url on every response that produced one; this makes it usable
+// as an <a href> from the Vite dev server, which is on a different origin.
+export function reportUrl(response) {
+  if (!response?.report_url) return null
+  return `${API_BASE_URL}${response.report_url}`
+}
+
 export function resolveAssetUrl(url) {
   if (!url) return url
   return url.startsWith("http") ? url : `${API_BASE_URL}${url}`
