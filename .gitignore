@@ -24,3 +24,50 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+
+# ---------------------------------------------------------------------------
+# models/ -- fine-tuned specialist agents (worker1 VRSBench, worker3 LEVIR-CC)
+#
+# WARNING: do NOT add a trailing comment to any "!" line below. Git parses
+# "!pattern  # text" as a literal pattern containing the '#', so it matches
+# nothing, the negation silently fails, and the adapters vanish from the commit
+# while `git status` still looks clean. Keep comments on their own lines.
+#
+# Verify after any edit to this file:
+#   git check-ignore -v models/adapters/report-adapter-v2/adapter_model.safetensors
+# That must print NOTHING. If it prints a rule, the weights are being dropped.
+# ---------------------------------------------------------------------------
+
+# The unsloth training venv -- the "*venv/" rules above do not catch this name.
+.venv-unsloth/
+models/.venv-unsloth/
+
+# Backend-only venv: FastAPI + reportlab, no torch. Lets the site be tested on a
+# machine with no GPU (workers fall back to labelled stubs).
+.venv-backend/
+unsloth_compiled_cache/
+
+# Datasets, ~5 GB. Both are public; see models/MODELS.md for download links.
+models/data/
+
+# Training logs and scratch output
+models/logs/
+models/checkpoints/
+*.log
+
+# Training checkpoints are 120 MB fp32 each and exceed GitHub's 100 MB limit.
+# Only the three bf16 inference exports (58 MB each) are committed.
+# Re-export with: python -m finetune.export_adapter --src <ckpt> --dst <out>
+models/adapters/*
+!models/adapters/report-adapter/
+!models/adapters/report-adapter-v2/
+!models/adapters/bitemporal-adapter/
+
+# Re-include the contents, which the *.safetensors rule above would otherwise
+# strip out of those three directories.
+!models/adapters/report-adapter/**
+!models/adapters/report-adapter-v2/**
+!models/adapters/bitemporal-adapter/**
+
+# Backend runtime state: uploaded imagery, generated overlays and PDF reports.
+backend/_data/
