@@ -57,7 +57,7 @@ export default function WorkerGraph({ workers, phase, result }) {
         </div>
         <div className="min-w-0">
           <p className="text-[13px] font-semibold text-ink">Shared Vision-Language Engine</p>
-          <p className="truncate text-[10.5px] font-mono text-ink-faint">Qwen2-VL-2B . common backbone for all workers</p>
+          <p className="truncate text-[10.5px] font-mono text-ink-faint">Qwen2.5-VL-3B . common backbone for all workers</p>
         </div>
       </div>
     </section>

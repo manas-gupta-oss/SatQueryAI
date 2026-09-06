@@ -89,10 +89,10 @@ const SCENARIOS = {
         "co-registration was not verified by the uploader; assumed aligned (demo simulation)",
       ],
       audit_summary:
-        "Two co-registered optical images of the same area at different acquisition dates -> change analysis routed to worker3 (CDVQA-tuned bi-temporal specialist).",
+        "Two co-registered optical images of the same area at different acquisition dates -> change analysis routed to worker3 (LEVIR-CC-tuned bi-temporal specialist).",
       execution_trace: [
         "Requested task: change_description",
-        "Selected tool: worker3 (Worker 3 - Bi-Temporal Change Specialist, adapted on CDVQA)",
+        "Selected tool: worker3 (Worker 3 - Bi-Temporal Change Specialist, adapted on LEVIR-CC)",
         "Image roles: {'pre': 'demo_img_0', 'post': 'demo_img_1'}",
         "Validation: pass",
         "Router confidence: 0.85",

@@ -20,7 +20,7 @@ export const FALLBACK_WORKERS = [
     short_name: "Cross-Modal Worker",
     description:
       "Joint reasoning over a co-registered optical/multispectral and SAR pair, plus question answering on a standalone SAR image.",
-    tuned_on: "BigthNet.txt",
+    tuned_on: "BigEarthNet (not yet trained)",
     tasks: ["cross_modal_fusion", "single_vqa"],
     min_images: 1,
     max_images: 2,
@@ -31,7 +31,7 @@ export const FALLBACK_WORKERS = [
     short_name: "Bi-Temporal Worker",
     description:
       "Change understanding over two spatially corresponding images of the same area acquired at different times.",
-    tuned_on: "CDVQA",
+    tuned_on: "LEVIR-CC",
     tasks: ["change_description", "change_vqa"],
     min_images: 2,
     max_images: 2,
@@ -94,8 +94,8 @@ export const MODALITY_OPTIONS = [
 
 export const SYSTEM_PANEL = {
   orchestration: "LangGraph",
-  router: "Qwen 2.5 - 3B (4-bit, function-calling)",
-  engine: "Qwen2-VL-2B (shared vision-language backbone)",
+  router: "Rule router (R1-R5 / V1-V7), or Qwen2.5-3B in 4-bit",
+  engine: "Qwen2.5-VL-3B, 4-bit, two QLoRA adapters on one base",
 }
 
 export const MAX_UPLOAD_BYTES = 50 * 1024 * 1024 // 50MB, enforced client-side
