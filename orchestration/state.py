@@ -41,7 +41,7 @@ class WorkerId(str, Enum):
 
     WORKER1 = "worker1"  # single-image (VRSBench-tuned)
     WORKER2 = "worker2"  # cross-modal optical+SAR (BigEarthNet.txt-tuned)
-    WORKER3 = "worker3"  # bi-temporal change (CDVQA-tuned)
+    WORKER3 = "worker3"  # bi-temporal change (LEVIR-CC-tuned)
     NONE = "none"        # validation failed -> no worker is executed
 
 
@@ -119,7 +119,7 @@ class InputBundle(BaseModel):
     benchmark_mode: bool = Field(
         False,
         description=(
-            "True when inputs come from a public benchmark (VRSBench/RSVQA/CDVQA); "
+            "True when inputs come from a public benchmark (VRSBench/LEVIR-CC); "
             "only then are PNG/JPEG accepted."
         ),
     )
