@@ -1,0 +1,45 @@
+# SECONDARY environment -- offline tooling only.
+#
+# For INFERENCE and for anything touching the shipped adapters, use
+# requirements-unsloth.txt instead. This stack cannot load them: they are
+# peft-0.20 format with regex target_modules, which peft 0.17.1 rejects.
+#
+# What still runs here:
+#   bitemporal/prepare_data.py     LEVIR-CC -> jsonl (needs scipy)
+#   finetune/export_adapter.py     fp32 -> bf16 adapter export
+#   finetune/train.py              the original plain-PEFT trainer
+#   finetune/evaluate.py           scoring plain-PEFT adapters
+#   generate_report.py             the original single-agent backend (superseded)
+#   metrics.py score               BLEU/METEOR/ROUGE/CIDEr tables (no torch needed)
+#
+# Setup:
+#   uv venv --python 3.12 .venv
+#   uv pip install --python .venv\Scripts\python.exe torch torchvision \
+#       --index-url https://download.pytorch.org/whl/cu128
+#   uv pip install --python .venv\Scripts\python.exe -r requirements.txt
+#
+# transformers is pinned: v5 restructured the Qwen2.5-VL internals and breaks
+# this code path. peft 0.17.x is the matching line.
+
+torch>=2.6              # install from the cu128 index above, not PyPI
+torchvision>=0.21
+transformers==4.56.1
+peft==0.17.1
+accelerate>=1.4
+bitsandbytes>=0.45      # Windows wheels available from 0.43+
+tokenizers<0.23
+safetensors>=0.4
+pillow>=10.0
+scipy>=1.11             # connected components for LEVIR-MCI mask -> bounding boxes
+numpy>=1.26
+sentencepiece>=0.2
+protobuf>=4.0
+
+# --- optional, for `metrics.py score` only -------------------------------
+# Neither is required: metrics.py implements BLEU, ROUGE, METEOR and CIDEr-D
+# itself and reports which METEOR backend it used.
+#   bert-score>=0.3.13   REQUIRED to reproduce the BERTScore column in
+#                        results/METRICS.md; downloads roberta-large (~1.4 GB).
+#                        Verified against this pinned stack as bert-score 0.3.13.
+#   nltk>=3.9            upgrades METEOR to the real WordNet-synonym version,
+#                        after: python -c "import nltk; nltk.download('wordnet')"

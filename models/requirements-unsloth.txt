@@ -1,0 +1,40 @@
+# PRIMARY / DEPLOYMENT environment.
+#
+# Both fine-tuned adapters (adapters/report-adapter-v2, adapters/bitemporal-adapter)
+# are Unsloth/peft-0.20 format and can ONLY be loaded here. This is what
+# generate_report_v2.py needs.
+#
+# Setup (Windows, Python 3.12, NVIDIA GPU with >= 4 GB VRAM):
+#
+#   uv venv --python 3.12 .venv-unsloth
+#   uv pip install --python .venv-unsloth\Scripts\python.exe torch torchvision \
+#       --index-url https://download.pytorch.org/whl/cu128
+#   uv pip install --python .venv-unsloth\Scripts\python.exe -r requirements-unsloth.txt
+#
+# Install torch FIRST from the CUDA index above -- `pip install unsloth` requires
+# an existing PyTorch and will not pull the CUDA build itself.
+#
+# Verified working on: RTX 4050 Laptop (6 GB, sm_89), driver 591.66, CUDA 12.8.
+# Peak VRAM with both adapters loaded: 2.65 GB.
+
+torch>=2.8              # install from the cu128 index above, not PyPI
+torchvision>=0.23
+
+unsloth==2026.9.2
+unsloth-zoo==2026.9.1
+triton-windows==3.8.0.post28    # Windows only; on Linux use `triton` instead
+xformers==0.0.35
+
+transformers==5.5.0     # unsloth 2026.9.2 pins the v5 line; 4.x will NOT work here
+peft==0.20.0            # writes regex target_modules; peft 0.17 cannot read these adapters
+trl==0.24.0
+tokenizers==0.22.2
+accelerate==1.14.0
+bitsandbytes==0.50.2
+huggingface-hub==1.30.0
+
+safetensors==0.8.0
+pillow==12.3.0
+numpy==2.5.2
+sentencepiece==0.2.2
+protobuf==7.36.1
