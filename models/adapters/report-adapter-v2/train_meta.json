@@ -1,0 +1,19 @@
+{
+  "backend": "unsloth",
+  "unsloth_model": "unsloth/Qwen2.5-VL-3B-Instruct-bnb-4bit",
+  "max_len": 1024,
+  "lr": 0.0001,
+  "micro_batch": 2,
+  "grad_accum": 4,
+  "effective_batch": 8,
+  "max_steps": 1200,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "task": "vrsbench_single_image",
+  "dataset": "VRSBench",
+  "compact_targets": true,
+  "images_per_sample": 1,
+  "step": 600,
+  "exported_dtype": "bfloat16",
+  "exported_from": "adapters/qwen25vl-vrsbench-unsloth/step-600"
+}

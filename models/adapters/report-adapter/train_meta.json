@@ -1,0 +1,14 @@
+{
+  "mode": "nf4_bf16",
+  "max_len": 1024,
+  "lr": 7e-05,
+  "grad_accum": 4,
+  "max_steps": 900,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "model_id": "Qwen/Qwen2.5-VL-3B-Instruct",
+  "compact_targets": true,
+  "step": 300,
+  "exported_dtype": "bfloat16",
+  "exported_from": "adapters/qwen25vl-vrsbench-qlora-leg2/step-300"
+}
