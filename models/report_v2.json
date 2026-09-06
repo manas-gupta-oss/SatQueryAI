@@ -1,0 +1,143 @@
+[
+  {
+    "status": "ok",
+    "error": null,
+    "task": "single_image",
+    "images": [
+      {
+        "filename": "satellite.png",
+        "path": "satellite.png",
+        "width": 475,
+        "height": 579,
+        "role": "scene"
+      }
+    ],
+    "model": {
+      "base": "unsloth/Qwen2.5-VL-3B-Instruct-bnb-4bit",
+      "adapter": "report-adapter-v2",
+      "backend": "unsloth",
+      "trained_steps": 600
+    },
+    "generated_at": "2026-09-05T09:13:40Z",
+    "inference_seconds": 44.31,
+    "analysis": {
+      "caption": "The image, sourced from GoogleEarth with high resolution, shows a landscape dominated by agricultural fields with various shades of green and brown. A small bridge is visible in the top-right area of the image, crossing over a body of water. The surrounding area includes patches of cultivated land and some areas that appear to be undeveloped or natural.",
+      "objects": [
+        {
+          "obj_id": 0,
+          "obj_cls": "bridge",
+          "referring_sentence": "The small bridge located in the top-right corner of the image spans across a body of water.",
+          "obj_position": "top-right",
+          "obj_size": "small",
+          "obj_coord": [
+            0.93,
+            0.34,
+            1.02,
+            0.4
+          ],
+          "bbox_normalized": [
+            0.93,
+            0.34,
+            1.0,
+            0.4
+          ]
+        }
+      ],
+      "qa_pairs": [
+        {
+          "ques_id": 1,
+          "question": "What type of landscape is predominantly shown in the image?",
+          "answer": "Agricultural",
+          "type": "scene type"
+        },
+        {
+          "ques_id": 2,
+          "question": "Is there a bridge present in the image?",
+          "answer": "Yes",
+          "type": "object existence"
+        },
+        {
+          "ques_id": 3,
+          "question": "Where is the bridge located within the image?",
+          "answer": "Top-right",
+          "type": "object position"
+        },
+        {
+          "ques_id": 4,
+          "question": "Does the bridge cross over a body of water?",
+          "answer": "Yes",
+          "type": "reasoning"
+        }
+      ]
+    },
+    "summary": {
+      "n_objects": 1,
+      "object_classes": [
+        "bridge"
+      ],
+      "n_qa_pairs": 4
+    }
+  },
+  {
+    "status": "ok",
+    "error": null,
+    "task": "bitemporal_change",
+    "images": [
+      {
+        "filename": "val_000001.png",
+        "path": "C:\\Users\\ashu2\\OneDrive\\Documents\\satquery\\data\\images\\val\\A\\val_000001.png",
+        "width": 256,
+        "height": 256,
+        "role": "before"
+      },
+      {
+        "filename": "val_000001.png",
+        "path": "C:\\Users\\ashu2\\OneDrive\\Documents\\satquery\\data\\images\\val\\B\\val_000001.png",
+        "width": 256,
+        "height": 256,
+        "role": "after"
+      }
+    ],
+    "model": {
+      "base": "unsloth/Qwen2.5-VL-3B-Instruct-bnb-4bit",
+      "adapter": "bitemporal-adapter",
+      "backend": "unsloth",
+      "trained_steps": 900
+    },
+    "generated_at": "2026-09-05T09:13:49Z",
+    "inference_seconds": 9.89,
+    "analysis": {
+      "change_detected": true,
+      "change_summary": "A house appears in the upper left corner of the scene.",
+      "changed_classes": [
+        "building"
+      ],
+      "change_regions": [
+        {
+          "class": "building",
+          "size": "medium",
+          "bbox": [
+            0.0,
+            0.0,
+            0.168,
+            0.145
+          ],
+          "bbox_normalized": [
+            0.0,
+            0.0,
+            0.168,
+            0.145
+          ]
+        }
+      ],
+      "change_extent": "small"
+    },
+    "summary": {
+      "change_detected": true,
+      "n_regions": 1,
+      "changed_classes": [
+        "building"
+      ]
+    }
+  }
+]
