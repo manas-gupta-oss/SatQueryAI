@@ -1,0 +1,53 @@
+# THE BOSS - the LLM routing node in orchestration/nodes/boss_node.py.
+#
+# Only read when SATQUERY_ROUTER=llm. The default deployment uses the
+# deterministic rule router in backend/routing/heuristic.py, which needs no
+# weights and no VRAM; see backend/README.md for the trade-off.
+#
+# Requires, in addition to backend/requirements.txt:
+#   pip install PyYAML lm-format-enforcer
+
+model:
+  name: Qwen/Qwen2.5-3B-Instruct
+  device_map: auto
+  trust_remote_code: false
+  # sdpa, not flash-attn: flash-attn is painful to build on Windows and the
+  # router's sequences are short enough that it makes no measurable difference.
+  attn_implementation: sdpa
+  # Set true once the weights are cached, to make startup work offline.
+  local_files_only: false
+
+quantization:
+  # ~2.2 GB in 4-bit. On a 6 GB card this sits alongside the 2.65 GB vision
+  # stack; disabling it needs ~6.2 GB for the router alone and will not fit.
+  enabled: true
+  load_in_4bit: true
+  bnb_4bit_quant_type: nf4
+  bnb_4bit_use_double_quant: true
+  # BossRouter.load() falls back to float16 automatically on a card without
+  # native bf16. RTX 4050 is Ada (sm_89), so bfloat16 is used there.
+  bnb_4bit_compute_dtype: bfloat16
+
+generation:
+  # Greedy. A router must be reproducible: the same query and the same imagery
+  # have to yield the same route every time it is demonstrated.
+  do_sample: false
+  max_new_tokens: 320
+  seed: 0
+
+constrained_generation:
+  # auto -> lm-format-enforcer if importable, then outlines, then unconstrained.
+  backend: auto
+  # Leave true so a missing library degrades to a logged warning and a
+  # structured rejection instead of taking the server down mid-demo. Set false
+  # in CI, where an unconstrained decode should be a hard failure.
+  allow_unconstrained_fallback: true
+  use_tool_call_prefill: true
+
+prompt:
+  include_registry_block: true
+  include_few_shots: true
+  max_few_shots: 9
+
+routing:
+  low_confidence_threshold: 0.35
